@@ -1,9 +1,8 @@
 #include "ros/ros.h"
-#include "GrassBoss/angle.h"
 #include "sensor_msgs/LaserScan.h"
 #include <visualization_msgs/Marker.h>
-#include <vector>
-#include <math.h>
+
+#include "GrassBoss/angle.h"
 
 ros::Publisher angle_pub;
 ros::Publisher marker_pub;
@@ -35,14 +34,14 @@ void scanner_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 	double pt_x , pt_y , left_min , right_min;
 	std::vector< double > left_dist , right_dist;
 
-	int min_index , max_index;
+	unsigned int min_index , max_index;
 	float low_scan_angle , high_scan_angle;
 	double pt_a_x , pt_a_y , pt_b_x , pt_b_y , dx ,dy;
 
 	angle_msg.header.stamp = msg->header.stamp;
 
 	// Iterate through points
-	for( int i = 0 ; i < msg->ranges.size() ; i++ )
+	for( unsigned int i = 0 ; i < msg->ranges.size() ; i++ )
 	{
 		// Transform from polar coordinates to euclidian coordinates
 		pt_x = msg->ranges.at(i) * cos( msg->angle_min + ( i * msg->angle_increment ) );
