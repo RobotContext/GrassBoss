@@ -1,0 +1,13 @@
+<launch>
+	<include file="$(find LIDAR)/launch/simOdom.launch"/>
+
+	<group ns="GrassBoss">
+		<node pkg="GrassBoss" type="mapInterface" name="mInterface" output="screen" >
+	        <param name="imageFile" value="$(find GrassBoss)/world/lawn_map_project.pgm" />
+	        <param name="imageTopic" value="/mapInterface/map" />
+		</node>
+	</group>
+	
+	<node pkg="image_view" type="image_view" name="iView" args="image:=/mapInterface/map" output="screen" />
+
+</launch>
