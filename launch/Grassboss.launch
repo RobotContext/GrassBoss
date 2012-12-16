@@ -1,10 +1,13 @@
 <launch>
   <node pkg="stage" type="stageros" name="simulator" args="$(find GrassBoss)/world/GrassBoss.world"/>
-  <node pkg="teleop_base" type="teleop_base_keyboard" name="keyboard" args="base_controller/command:=cmd_vel"/>
+  <node pkg="teleop_base" type="teleop_base_keyboard" name="keyboard" args="base_controller/command:=cmd_vel" output="screen" />
   <node pkg="rviz" type="rviz" name="visualization" args="$(find GrassBoss)/conf/GrassBoss.vcg"/>
 
   <node pkg="GrassBoss" type="angle_parser" name="angle_parser">
     <param name="scanner_topic" value="/base_scan"/>
     <param name="angle_topic" value="/angle"/>
   </node>
+
+  <node pkg="fmExecutors" name="moveConstantVelocity" type="moveConstantVelocity.py"/>
+  <node pkg="fmExecutors" name="timed_turn" type="timed_turn_action.py"/>
 </launch>

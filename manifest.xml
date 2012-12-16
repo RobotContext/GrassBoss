@@ -1,18 +1,24 @@
 <package>
-  <description brief="GrassBoss">
+  <description brief="grassboss">
 
-     GrassBoss
+     grassboss
 
   </description>
-  <author>Kent</author>
+  <author>LeonBondeLarsen</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/GrassBoss</url>
-
+  <url>http://ros.org/wiki/grassboss</url>
   <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="actionlib"/>
+  <depend package="actionlib_msgs"/>
   <depend package="sensor_msgs"/>
   <depend package="visualization_msgs"/>
-
+  <depend package="geometry_msgs"/>
+  <depend package="rviz"/>
+  <depend package="teleop_base"/>
+  <depend package="smach"/>
+  <depend package="smach_ros"/>
 </package>
 
 
