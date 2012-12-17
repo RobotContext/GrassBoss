@@ -30,3 +30,4 @@ rosbuild_genmsg()
 #target_link_libraries(example ${PROJECT_NAME})
 
 rosbuild_add_executable(angle_parser src/angle_parser.cpp)
+rosbuild_add_executable(mapInterface src/MapInterface.cpp)
