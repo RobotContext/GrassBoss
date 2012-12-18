@@ -16,6 +16,7 @@ class startDriving(smach.State):
     def execute(self, userdata):
         goal = constantVelocityAction
         goal.velocity = 5
+        goal.angle = 0
         self.driveActionClient.send_goal(goal)
         return 'startedDriving'
 
@@ -28,6 +29,7 @@ class stopDriving(smach.State):
         self.driveActionClient.cancel_all_goals()
         goal = constantVelocityAction
         goal.velocity = 0
+        goal.angle = 0
         self.driveActionClient.send_goal(goal)
         return 'stoppedDriving'
 
@@ -38,6 +40,7 @@ def lookForWire_cb(ud, msg):
     else:
         return True
         
+
 def main():
     try:
         rospy.init_node("continueStraightUntilWire")

@@ -1,5 +1,6 @@
 #goal definition
 int32 velocity
+int32 angle
 ---
 #result
 ---
