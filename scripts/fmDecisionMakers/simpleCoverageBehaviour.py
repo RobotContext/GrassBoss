@@ -47,44 +47,36 @@ class avoidWireReverse(smach.State):
         return 'done'
         
 
-class startTurning(smach.State):
+class timedAngleTurn(smach.State):
     def __init__(self, driveActionClient):
-        smach.State.__init__(self, outcomes=['turning'], input_keys=['angularspeed'])
+        smach.State.__init__(self, outcomes=['done'], input_keys=['angle'])
         self.driveActionClient = driveActionClient
 
     def execute(self, userdata):
         goal = constantVelocityAction
         goal.velocity = 0
-        goal.angle = userdata.angularspeed
+        goal.angle = 1
         self.driveActionClient.send_goal(goal)
-        return 'turning'
+        rospy.sleep(1)
+        return 'done'
 
 
-class stopTurning(smach.State):
-    def __init__(self, driveActionClient):
-        smach.State.__init__(self, outcomes=['stopped'])
-        self.driveActionClient = driveActionClient
-
-    def execute(self, userdata):
-        goal = constantVelocityAction
-        goal.velocity = 0
-        goal.angle = 0
-        self.driveActionClient.send_goal(goal)
-        return 'stopped'
-
-class goAwayFromWire(smach.State):
+class timedDrive(smach.State):
     def __init__(self, driveActionClient):
         smach.State.__init__(self, outcomes=['done'])
         self.driveActionClient = driveActionClient
+
     def execute(self, userdata):
         goal = constantVelocityAction
         goal.velocity = 5
         goal.angle = 0
+
         self.driveActionClient.send_goal(goal)
-        rospy.sleep(1)
+        rospy.sleep(2)
         goal.velocity = 0
         self.driveActionClient.send_goal(goal)
         return 'done'
+
 
 def lookForWire_cb(ud, msg):
     if msg.angle != 0:
@@ -93,13 +85,6 @@ def lookForWire_cb(ud, msg):
     else:
         return True
 
-def waitForWireAngle_cb(ud, msg):
-    #rospy.loginfo(ud.angle)
-    rospy.loginfo(msg.angle)
-    if math.fabs(90 - math.fabs(msg.angle)) <= 2:
-        return False
-    else:
-        return True
 
 
 def main():
@@ -115,23 +100,18 @@ def main():
                 smach.StateMachine.add('startDrivingForward', startDriving(driveActionClient), transitions={'startedDriving':'lookForWire'})
                 smach.StateMachine.add('lookForWire', smach_ros.MonitorState("/angle", angle, lookForWire_cb), transitions={'invalid':'stopDrivingForward', 'valid':'lookForWire', 'preempted':'stopDrivingForward'})
                 smach.StateMachine.add('stopDrivingForward', stopDriving(driveActionClient), transitions={'stoppedDriving':'wireFound'})
-            alignsm = smach.StateMachine(outcomes=['wireAvoided'])
+            alignsm = smach.StateMachine(outcomes=['aligned'])
             with alignsm:
                 turnsm = smach.StateMachine(outcomes=['turned'])
                 turnsm.userdata.angle = 90
                 turnsm.userdata.angularspeed = 1
-                with turnsm:
-                    smach.StateMachine.add('startTurning', startTurning(driveActionClient), transitions={'turning':'waitForWireAngle'},remapping={'angularspeed':'angularspeed'})
-                    smach.StateMachine.add('waitForWireAngle', smach_ros.MonitorState("/angle", angle, waitForWireAngle_cb), transitions={'invalid':'stopTurning', 'valid':'waitForWireAngle', 'preempted':'stopTurning'}, remapping={'angle':'angle'})
-                    smach.StateMachine.add('stopTurning', stopTurning(driveActionClient), transitions={'stopped':'turned'})
 
-                smach.StateMachine.add('turnToWireAngle', turnsm, transitions={'turned':'goAwayFromWire'})
-                smach.StateMachine.add('goAwayFromWire', goAwayFromWire(driveActionClient), transitions={'done':'wireAvoided'})
-                #smach.StateMachine.add('followWire', avoidWireReverse(driveActionClient), transitions={'done':'avoidWireTurn'})
-                #smach.StateMachine.add('avoidWireTurn', avoidWireTurn(driveActionClient), transitions={'avoided':'wireAvoided'})
+                smach.StateMachine.add('timedAngleTurnIn', timedAngleTurn(driveActionClient), transitions={'done':'timedDrive'})
+                smach.StateMachine.add('timedDrive', timedDrive(driveActionClient), transitions={'done':'timedAngleTurnOut'})
+                smach.StateMachine.add('timedAngleTurnOut', timedAngleTurn(driveActionClient), transitions={'done':'aligned'})
 
             smach.StateMachine.add('continueUntilWire', drivesm, transitions={'wireFound':'alignForNextRow'})
-            smach.StateMachine.add('alignForNextRow', alignsm, transitions={'wireAvoided':'continueUntilWire'})
+            smach.StateMachine.add('alignForNextRow', alignsm, transitions={'aligned':'continueUntilWire'})
         sis = smach_ros.IntrospectionServer('server_name', sm, '/STATE MACHINE')
         sis.start()
         sm.execute()
