@@ -74,22 +74,24 @@ def main():
         driveActionClient.wait_for_server()
 
         sm = smach.StateMachine(outcomes=['DONE'])
-        sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
-        sis.start()
         with sm:
             drivesm = smach.StateMachine(outcomes=['wireFound'])
             with drivesm:
-                smach.StateMachine.add('startDriving', startDriving(driveActionClient), transitions={'startedDriving':'lookForWire'})
-                smach.StateMachine.add('lookForWire', smach_ros.MonitorState("/angle", angle, lookForWire_cb), transitions={'invalid':'stopDriving', 'valid':'lookForWire', 'preempted':'stopDriving'})
-                smach.StateMachine.add('stopDriving', stopDriving(driveActionClient), transitions={'stoppedDriving':'wireFound'})
-            smach.StateMachine.add('continueUntilWire', drivesm, transitions={'wireFound':'avoidWireReverse'})
-            smach.StateMachine.add('avoidWireReverse', avoidWireReverse(driveActionClient), transitions={'done':'avoidWireTurn'})
-            smach.StateMachine.add('avoidWireTurn', avoidWireTurn(driveActionClient), transitions={'avoided':'continueUntilWire'})
+                smach.StateMachine.add('startDrivingForward', startDriving(driveActionClient), transitions={'startedDriving':'lookForWire'})
+                smach.StateMachine.add('lookForWire', smach_ros.MonitorState("/angle", angle, lookForWire_cb), transitions={'invalid':'stopDrivingForward', 'valid':'lookForWire', 'preempted':'stopDrivingForward'})
+                smach.StateMachine.add('stopDrivingForward', stopDriving(driveActionClient), transitions={'stoppedDriving':'wireFound'})
+            avoidsm = smach.StateMachine(outcomes=['wireAvoided'])
+            with avoidsm:
+                smach.StateMachine.add('avoidWireReverse', avoidWireReverse(driveActionClient), transitions={'done':'avoidWireTurn'})
+                smach.StateMachine.add('avoidWireTurn', avoidWireTurn(driveActionClient), transitions={'avoided':'wireAvoided'})
 
+            smach.StateMachine.add('continueUntilWire', drivesm, transitions={'wireFound':'avoidWire'})
+            smach.StateMachine.add('avoidWire', avoidsm, transitions={'wireAvoided':'continueUntilWire'})
+        sis = smach_ros.IntrospectionServer('server_name', sm, '/STATE MACHINE')
+        sis.start()
         sm.execute()
-        rospy.spin()
         sis.stop()
-    except rospy.exceptions.ROSInterruptException:
+    except (rospy.exceptions.ROSInterruptException, smach.exceptions.InvalidUserCodeError):
         pass
         
 if __name__ == "__main__":

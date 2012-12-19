@@ -12,6 +12,6 @@
     <param name="noiseDeviation" value="0.07"/>
   </node>
   <node pkg="GrassBoss" name="moveConstantVelocity" type="moveConstantVelocity.py"/>
-  <node pkg="GrassBoss" name="timed_turn" type="stupidCoverageBehaviour.py"/>
+  <node pkg="GrassBoss" name="stupidCoverageBehaviour" type="stupidCoverageBehaviour.py"/>
   <node pkg="smach_viewer" name="stateMachine_viewer" type="smach_viewer.py"/>
 </launch>
