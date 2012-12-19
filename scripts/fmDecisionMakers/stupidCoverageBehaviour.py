@@ -15,7 +15,7 @@ class startDriving(smach.State):
 
     def execute(self, userdata):
         goal = constantVelocityAction
-        goal.velocity = 5
+        goal.velocity = 50
         goal.angle = 0
         self.driveActionClient.send_goal(goal)
         return 'startedDriving'
@@ -39,7 +39,7 @@ class avoidWireReverse(smach.State):
         self.driveActionClient = driveActionClient
     def execute (self, userdata):
         goal = constantVelocityAction
-        goal.velocity = -1
+        goal.velocity = -10
         goal.angle = 0
         self.driveActionClient.send_goal(goal)
         rospy.sleep(1)

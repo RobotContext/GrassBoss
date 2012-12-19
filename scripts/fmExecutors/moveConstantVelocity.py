@@ -19,7 +19,7 @@ class MoveConstantVelocityAction():
         self.__server.start()
 
 
-        self.vel_pub = rospy.Publisher("/cmd_vel", Twist)
+        self.vel_pub = rospy.Publisher("/velocity", Twist)
         
     def preempt_cb(self):
         goal = False

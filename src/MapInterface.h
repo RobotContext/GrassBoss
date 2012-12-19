@@ -16,6 +16,7 @@
 #include <opencv/highgui.h>
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Float64.h>
+#include <geometry_msgs/TwistStamped.h>
 
 class MapInterface
 {
@@ -31,6 +32,7 @@ private:
 	//	ROS
 	ros::NodeHandle nodeHandle;
 	ros::Subscriber odometrySubscriber;
+	ros::Subscriber resetSubscriber;
 
 	//	Image matrix
 	cv::Mat image;
@@ -54,6 +56,7 @@ private:
 
 	//	Callbacks
 	void odometryCallback (const nav_msgs::Odometry::ConstPtr& data);
+	void resetCallback (const geometry_msgs::TwistStamped::ConstPtr& data);
 
 public:
 	MapInterface();

@@ -24,6 +24,7 @@ MapInterface::MapInterface() :	nodeHandle("~"),
 
 	//	Setup subscriber
 	this->odometrySubscriber = this->nodeHandle.subscribe(this->odometryTopic, 10, &MapInterface::odometryCallback, this);
+	this->resetSubscriber = this->nodeHandle.subscribe("/mapInterface/reset", 10, &MapInterface::resetCallback, this);
 
 	//	Setup output and publisher
 	this->output.header.frame_id = this->mapLink;
@@ -99,6 +100,18 @@ void MapInterface::odometryCallback (const nav_msgs::Odometry::ConstPtr& data)
 	double y = (double)data.get()->pose.pose.position.y;
 
 	this->drawCircle((int)(x / this->scale), (int)(y / this->scale), 10, 50);
+}
+
+void MapInterface::resetCallback (const geometry_msgs::TwistStamped::ConstPtr& data)
+{
+	ROS_INFO("\nLoading map...\n");
+	this->image = cv::imread(this->imageFile, CV_LOAD_IMAGE_GRAYSCALE);
+
+	//	Calculate free space, draw and stuff
+	this->qFreeSpace = this->countFreeSpacePixels();
+
+	//	Show info
+	this->showInfo();
 }
 
 unsigned int MapInterface::countFreeSpacePixels (void)

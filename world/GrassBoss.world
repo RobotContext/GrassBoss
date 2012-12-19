@@ -1,17 +1,18 @@
 name            "GrassBossWorld"
-interval_sim    100
-resolution      0.01
+interval_sim    2
+resolution      0.1
+threads         4
 
 window
 ( 
-   size [ 300 600 ] 
+   size [ 500 900 ] 
    rotate [ 0 0 ]
    scale 10 
 )
 
 define map model
 (
-   size [ 30 50 1]
+   size [ 55 95 1]
    color "gray30"
    boundary 1
    obstacle_return 1
@@ -63,15 +64,15 @@ map
 (
    name "lawn"
    bitmap "lawn.pgm"
-   size [ 20 30 1]
+   size [ 60 100 1]
    pose [ 0 0 0 0 ]
 )
 
 line
 (
    name "line"
-   bitmap "lawn_line.pgm"
-   size [ 15 25 1]
+   bitmap "lawn_line_filled.pgm"
+   size [ 55 95 1]
    pose [ 0 0 0 0 ]
 )
 
