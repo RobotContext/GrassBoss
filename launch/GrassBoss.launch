@@ -1,9 +1,9 @@
 <launch>
   <node pkg="stage" type="stageros" name="simulator" args="$(find GrassBoss)/world/GrassBoss.world"/>
-  <node pkg="teleop_base" type="teleop_base_keyboard" name="keyboard" args="base_controller/command:=cmd_vel"/>
+  <!--node pkg="teleop_base" type="teleop_base_keyboard" name="keyboard" args="base_controller/command:=cmd_vel"/-->
   <node pkg="rviz" type="rviz" name="visualization" args="$(find GrassBoss)/conf/GrassBoss.vcg"/>
+  
   <node pkg="image_view" type="image_view" name="iView" args="image:=/mapInterface/map" output="screen" />
-
   <node pkg="GrassBoss" type="mapInterface" name="mInterface" output="screen" >
     <param name="imageFile" type="string" value="$(find GrassBoss)/world/lawn_map_project.pgm" />
     <param name="imageTopic" type="string" value="/mapInterface/map" />
@@ -15,4 +15,8 @@
     <param name="scanner_topic" value="/base_scan"/>
     <param name="angle_topic" value="/angle"/>
   </node>
+
+  <node pkg="GrassBoss" name="moveConstantVelocity" type="moveConstantVelocity.py"/>
+  <node pkg="GrassBoss" name="timed_turn" type="stupidCoverageBehaviour.py"/>
+  <node pkg="smach_viewer" name="stateMachine_viewer" type="smach_viewer.py"/>
 </launch>
