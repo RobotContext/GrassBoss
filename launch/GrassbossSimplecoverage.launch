@@ -1,0 +1,17 @@
+<launch>
+  <node pkg="stage" type="stageros" name="simulator" args="$(find GrassBoss)/world/GrassBoss.world"/>
+  <node pkg="teleop_base" type="teleop_base_keyboard" name="keyboard" args="base_controller/command:=velocity" output="screen" />
+  <!--<node pkg="rviz" type="rviz" name="visualization" args="$(find GrassBoss)/conf/GrassBoss.vcg"/>-->
+
+  <node pkg="GrassBoss" type="angle_parser" name="angle_parser">
+    <param name="scanner_topic" value="/base_scan"/>
+    <param name="angle_topic" value="/angle"/>
+  </node>
+  <node pkg="GrassBoss" type="odometry_noise" name="odometry_noise">
+    <param name="noiseMean" value="0.01"/>
+    <param name="noiseDeviation" value="0.07"/>
+  </node>
+  <node pkg="GrassBoss" name="moveConstantVelocity" type="moveConstantVelocity.py"/>
+<!--  <node pkg="GrassBoss" name="simpleCoverageBehaviour" type="simpleCoverageBehaviour.py"/> -->
+  <node pkg="smach_viewer" name="stateMachine_viewer" type="smach_viewer.py"/>
+</launch>
