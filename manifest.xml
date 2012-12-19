@@ -14,6 +14,9 @@
   <depend package="actionlib_msgs"/>
   <depend package="sensor_msgs"/>
   <depend package="visualization_msgs"/>
+  <depend package="image_transport"/>
+  <depend package="std_msgs"/>
+  <depend package="cv_bridge"/>
   <depend package="geometry_msgs"/>
   <depend package="rviz"/>
   <depend package="teleop_base"/>

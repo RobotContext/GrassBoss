@@ -32,4 +32,6 @@ rosbuild_genmsg()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(angle_parser src/angle_parser.cpp)
 rosbuild_add_executable(odometry_noise src/odometry_noise.cpp)
+rosbuild_add_executable(mapInterface src/MapInterface.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
+
