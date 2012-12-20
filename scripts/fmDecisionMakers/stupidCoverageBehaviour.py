@@ -88,7 +88,7 @@ def build_stupidBehaviour_sm():
 
 def main():
     try:
-        rospy.init_node("continueStraightUntilWire")
+        rospy.init_node("stupid_coverage_behaviour")
         sm = build_stupidBehaviour_sm()
         #sis = smach_ros.IntrospectionServer('server_name', sm, '/STATE MACHINE')
         #sis.start()
