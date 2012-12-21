@@ -10,30 +10,22 @@ window
    scale 10 
 )
 
-define map model
-(
-   size [ 55 95 1]
-   color "gray30"
-   boundary 1
-   obstacle_return 1
-)
-
 define line model
 (
    size [ 28.5 48.5 1]
    color "gray30"
-   boundary 0
+   boundary 1
    laser_return 1
-   obstacle_return 0
+   obstacle_return 1
 )
 
 define edge_sensor ranger
 (
    sensor
    ( 		
-      range [ 0.0  0.5 ]
+      range [ 0.0  1 ]
       fov 360
-      samples 360
+      samples 180
    )
 )
 
@@ -48,7 +40,7 @@ define lawnmower position
 
 define lawnmower_shape lawnmower
 (
-   block( bitmap "lawn_map_project.pgm"
+   block( 
       points 6
       point[0] [0 1]
       point[1] [0 3]
@@ -60,18 +52,11 @@ define lawnmower_shape lawnmower
   )
 )
 
-map
-(
-   name "lawn"
-   bitmap "lawn.pgm"
-   size [ 60 100 1]
-   pose [ 0 0 0 0 ]
-)
 
 line
 (
    name "line"
-   bitmap "lawn_line_filled.pgm"
+   bitmap "lawn_map_project.pgm"
    size [ 55 95 1]
    pose [ 0 0 0 0 ]
 )
@@ -81,4 +66,5 @@ lawnmower
    pose [ 0 0 0 0 ] 
    name "GrassBossOne" 
    color "blue"
+   size [0.5 0.5 0.5]
 )

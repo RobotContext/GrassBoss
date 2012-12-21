@@ -33,5 +33,6 @@ rosbuild_genmsg()
 rosbuild_add_executable(angle_parser src/angle_parser.cpp)
 rosbuild_add_executable(mapInterface src/MapInterface.cpp)
 rosbuild_add_executable(odometry_noise src/odometry_noise.cpp)
+rosbuild_add_executable(grass_sensor src/grass_sensor.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
