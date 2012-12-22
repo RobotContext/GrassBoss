@@ -1,4 +1,4 @@
 <launch>
-	<include file="GrassBossBase.xml" />
+	<include file="$(find GrassBoss)/launch/GrassBossBase.xml" />
   	<node pkg="GrassBoss" name="coverageMission" type="stupidCoverageMission.py"/>
 </launch>
