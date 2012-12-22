@@ -1,0 +1,4 @@
+<launch>
+	<include file="GrassBossBase.xml" />
+  	<node pkg="GrassBoss" name="coverageMission" type="simpleCoverageMission.py"/>
+</launch>

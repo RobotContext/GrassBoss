@@ -87,8 +87,12 @@ void scanner_callback(const sensor_msgs::LaserScan::ConstPtr& msg)
 		dy = max(pt_a_y , pt_b_y) - min(pt_a_y , pt_b_y);
 
 		// Calculate angle relative to robot
-		angle_msg.angle = 360 * ( atan(dx/dy) / 6.28 );
-
+		//if(dx/dy < -0.1 || dx/dy > 0.1)
+			angle_msg.angle = 360 * ( atan2(dy , dx) / 6.28 );
+		//else
+		//	angle_msg.angle = dx/dy < -0.1?-90:90;
+		
+		
 		// Sign angle
 		if( msg->ranges.at(min_index) > msg->ranges.at(max_index) )
 			angle_msg.angle *= -1;
